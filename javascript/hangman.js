@@ -21,14 +21,13 @@ class Hangman {
 
   addCorrectLetter(letter) {
     this.guessedLetters += letter
-    if (this.checkWinner()) console.log("WOOOOON")
-    else if (this.checkGameOver()) console.log("LOOOOOOST")
+    if (this.checkWinner()) hangmanCanvas.winner()
   }
 
   addWrongLetter(letter) {
     this.errorsLeft--
     if (!this.letters.includes(letter)) this.letters.push(letter)
-    this.checkGameOver()
+    if (this.checkGameOver()) hangmanCanvas.gameOver()
   }
 
   checkGameOver() {

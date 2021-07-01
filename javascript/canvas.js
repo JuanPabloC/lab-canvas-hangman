@@ -7,10 +7,11 @@ class HangmanCanvas {
       x: 420,
       y: 500,
     }
-    this.wrongLetterPosition = {
-      x: 800,
-      y: 0,
-    }
+    this.wrongLetterCounter = 0
+    this.gameOverImg = new Image()
+    this.gameOverImg.src = "../images/gameover.png"
+    this.winnerImg = new Image()
+    this.winnerImg.src = "../images/awesome.png"
     this.lines = [
       {
         //BASE
@@ -96,8 +97,7 @@ class HangmanCanvas {
   createBoard() {
     //clear all
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    this.wrongLetterPosition.x = 800
-    this.wrongLetterPosition.y = 200
+    this.wrongLetterCounter = 0
 
     //draw word lines
     this.drawLines()
@@ -138,19 +138,16 @@ class HangmanCanvas {
   writeWrongLetter(letter, errorsLeft) {
     this.drawHangman(errorsLeft)
 
+    let pos = this.getWrongLetterPosition()
     this.context.beginPath()
     this.context.textBaseline = "top"
-    this.context.textAlign = "end"
+    this.context.textAlign = "center"
     this.context.font = "50px arial"
     this.context.fillStyle = "red"
-    this.context.fillText(
-      letter,
-      this.wrongLetterPosition.x,
-      this.wrongLetterPosition.y
-    )
+    this.context.fillText(letter, pos.x, pos.y)
     this.context.closePath
 
-    this.wrongLetterPosition.y += 70
+    this.wrongLetterCounter++
   }
 
   drawHangman(errorsLeft) {
@@ -171,10 +168,20 @@ class HangmanCanvas {
   }
 
   gameOver() {
-    // ... your code goes here
+    this.context.drawImage(this.gameOverImg, 300, 200)
   }
 
   winner() {
-    // ... your code goes here
+    this.context.drawImage(this.winnerImg, 150, 0)
+  }
+
+  getWrongLetterPosition() {
+    let extra = this.wrongLetterCounter % 5
+    let column = (this.wrongLetterCounter - extra) / 5
+
+    return {
+      x: 800 + 60 * column,
+      y: 100 + 70 * extra,
+    }
   }
 }
