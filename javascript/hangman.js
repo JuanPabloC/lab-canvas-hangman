@@ -21,11 +21,14 @@ class Hangman {
 
   addCorrectLetter(letter) {
     this.guessedLetters += letter
+    if (this.checkWinner()) console.log("WOOOOON")
+    else if (this.checkGameOver()) console.log("LOOOOOOST")
   }
 
   addWrongLetter(letter) {
     this.errorsLeft--
     if (!this.letters.includes(letter)) this.letters.push(letter)
+    this.checkGameOver()
   }
 
   checkGameOver() {
@@ -55,15 +58,31 @@ if (startGameButton) {
       "lisboa",
     ])
 
+    console.log("I've been clicked")
+
     // HINT (uncomment when start working on the canvas portion of the lab)
-    // hangman.secretWord = hangman.pickWord();
-    // hangmanCanvas = new HangmanCanvas(hangman.secretWord);
+    hangman.secretWord = hangman.pickWord()
+    hangmanCanvas = new HangmanCanvas(hangman.secretWord)
 
     // ... your code goes here
+    hangmanCanvas.createBoard()
   })
 }
 
 document.addEventListener("keydown", (event) => {
-  // React to user pressing a key
-  // ... your code goes here
+  if (hangman.checkIfLetter(event.keyCode)) {
+    if (hangman.checkClickedLetters(event.key)) {
+      if (hangman.secretWord.includes(event.key)) {
+        for (let i = 0; i < hangman.secretWord.length; i++) {
+          if (hangman.secretWord.charAt(i) === event.key) {
+            hangman.addCorrectLetter(event.key)
+            hangmanCanvas.writeCorrectLetter(i)
+          }
+        }
+      } else {
+        hangman.addWrongLetter(event.key)
+        hangmanCanvas.writeWrongLetter(event.key, hangman.errorsLeft)
+      }
+    }
+  }
 })
